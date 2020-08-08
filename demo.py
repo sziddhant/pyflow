@@ -49,9 +49,9 @@ def func (i):
     u, v, im2W = pyflow.coarse2fine_flow(
         im1, im2, alpha, ratio, minWidth, nOuterFPIterations, nInnerFPIterations,
         nSORIterations, colType)
-    e = time.time()
-    print('Time Taken: %.2f seconds for image of size (%d, %d, %d)' % (
-        e - s, im1.shape[0], im1.shape[1], im1.shape[2]))
+    #e = time.time()
+    #print('Time Taken: %.2f seconds for image of size (%d, %d, %d)' % (
+    #    e - s, im1.shape[0], im1.shape[1], im1.shape[2]))
     flow = np.concatenate((u[..., None], v[..., None]), axis=2)
     # np.save('examples/outFlow.npy', flow)
 
@@ -66,6 +66,7 @@ def func (i):
     print(i)
 
 dataset=[i for i in range(0,29)]
+
 agents = 4
 chunksize = 1
 with Pool(processes=agents) as pool:
