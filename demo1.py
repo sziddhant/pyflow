@@ -9,30 +9,21 @@ import argparse
 import pyflow
 import cv2
 import pickle
-import multiprocessing
-from multiprocessing import Pool
-
-
-num_cores = multiprocessing.cpu_count()
 
 cap = cv2.VideoCapture("Blender.avi")
 ret, im1 = cap.read()
 
 frames = []
-result = np.empty((29, 480, 640, 3))
+result = []
 frames.append(im1)
 while(1):
     ret, im1 = cap.read()
     if ret:
-        #cv2.imshow('frame2', im1)
-        #cv2.waitKey(0)
         frames.append(im1)
     else:
         break
 
-#for i in range(len(frames)-1):
-def func (i):
-    global frames,result
+for i in range(len(frames)-1):
     im1 = frames[i]
     im2 = frames[i+1]
     im1 = im1.astype(float) / 255.
@@ -64,26 +55,11 @@ def func (i):
     hsv[..., 0] = ang * 180 / np.pi / 2
     hsv[..., 2] = cv2.normalize(mag, None, 0, 255, cv2.NORM_MINMAX)
     rgb = cv2.cvtColor(hsv, cv2.COLOR_HSV2BGR)
-    result[i]=rgb
+    result.append(rgb)
     print(i)
 
-
-
-#
-dataset=[i for i in range(0,29)]
-print(dataset)
-agents = 30
-chunksize = 1
-with Pool(processes=agents) as pool:
-  results = pool.map(func, dataset, chunksize)
-
-
-
-
-
-print (result.shape)
+    
 with open("Blender.txt", "wb") as fp:
-    #result.tolist()
     pickle.dump(result, fp)
 
 with open("Blender.txt", "rb") as fp:

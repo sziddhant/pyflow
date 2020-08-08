@@ -1,8 +1,9 @@
-import cPickle as pickle
+import  pickle
 import cv2
 
 with open("Blender.txt", "rb") as fp:
     res = pickle.load(fp)
+
 
 for i in range(len(res)):
     rgb = res[i]
