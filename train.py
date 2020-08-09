@@ -188,7 +188,7 @@ class DataGenerator(Sequence):
             result = pool.map(func, dataset, chunksize)
         video = np.asarray(result)
         video = np.transpose(video, (1,2,0,3))  
-        video = np.reshape(video, (182, 240, 58))
+        video = np.reshape(video, (144, 192, 58))
 
     data.append(video)
     x = np.asarray(data)
@@ -240,7 +240,7 @@ class ValDataGenerator(Sequence):
           result = pool.map(func, dataset, chunksize)
       video = np.asarray(result)
       video = np.transpose(video, (1,2,0,3))
-      video = np.reshape(video, (182, 240, 58))
+      video = np.reshape(video, (144, 192, 58))
       data.append(video)
     x = np.asarray(data)
     y = np.asarray(gt)
@@ -253,7 +253,7 @@ training_generator = DataGenerator()
 validation_generator = ValDataGenerator()
 
 #initialise model
-model = k_model([182, 240, 58])
+model = k_model([144, 192, 58])
 opt = keras.optimizers.Adam(learning_rate=0.000001)
 model.compile(loss="mse", optimizer=opt, metrics=["mse"])
 
