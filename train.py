@@ -1,3 +1,14 @@
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+# from __future__ import unicode_literals
+from PIL import Image
+import time
+import argparse
+import pyflow
+import pickle
+import multiprocessing
+from multiprocessing import Pool
 import numpy as np 
 import pandas as pd
 import os
@@ -18,17 +29,7 @@ from tensorflow.keras.callbacks import ModelCheckpoint
 from tensorflow.keras import Model
 from tensorflow.keras import backend as K
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-# from __future__ import unicode_literals
-from PIL import Image
-import time
-import argparse
-import pyflow
-import pickle
-import multiprocessing
-from multiprocessing import Pool
+
 
 dataset=[i for i in range(0,29)]
 frames=[]
@@ -176,9 +177,9 @@ class DataGenerator(Sequence):
         while(True):
             ret, frame = vid.read()
             if ret:
-            frames.append(frame)
+              frames.append(frame)
             else:
-            break
+              break
         #Optical flow conversion
         global dataset
         agents = 30
