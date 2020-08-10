@@ -173,8 +173,6 @@ class DataGenerator(Sequence):
         global frames
         frames = []
         vid = cv2.VideoCapture("/workspace/storage/T/"+name[i]+".avi")
-        tmp = np.array([X[i], Y[i], Z[i]])
-        gt.append(tmp)
         while(True):
             ret, frame = vid.read()
             if ret:
@@ -194,6 +192,8 @@ class DataGenerator(Sequence):
         np.save(path,video)
       flow= np.load("/workspace/storage/Tf/"+name[i]+".npy")
       data.append(flow_video)
+      tmp = np.array([X[i], Y[i], Z[i]])
+      gt.append(tmp)
     x = np.asarray(data)
     y = np.asarray(gt)
     if(self.to_fit):
@@ -227,8 +227,6 @@ class ValDataGenerator(Sequence):
         global frames
         frames = []      
         vid = cv2.VideoCapture("/workspace/storage/T/"+name[i]+".avi")
-        tmp = np.array([X[i], Y[i], Z[i]])
-        gt.append(tmp)
         while(True):
           ret, frame = vid.read()
           if ret:
@@ -248,6 +246,8 @@ class ValDataGenerator(Sequence):
         np.save(path,video)
       flow= np.load("/workspace/storage/Tf/"+name[i]+".npy")
       data.append(flow_video)
+      tmp = np.array([X[i], Y[i], Z[i]])
+      gt.append(tmp)
     x = np.asarray(data)
     y = np.asarray(gt)
     if(self.to_fit):
