@@ -61,16 +61,8 @@ for ii in range(300000):
         #print('Time Taken: %.2f seconds for image of size (%d, %d, %d)' % (
         #    e - s, im1.shape[0], im1.shape[1], im1.shape[2]))
         flow = np.concatenate((u[..., None], v[..., None]), axis=2)
-        # np.save('examples/outFlow.npy', flow)
 
-        hsv = np.zeros(im1.shape, dtype=np.uint8)
-        hsv[:, :, 0] = 255
-        hsv[:, :, 1] = 255
-        mag, ang = cv2.cartToPolar(flow[..., 0], flow[..., 1])
-        hsv[..., 0] = ang * 180 / np.pi / 2
-        hsv[..., 2] = cv2.normalize(mag, None, 0, 255, cv2.NORM_MINMAX)
-        rgb = cv2.cvtColor(hsv, cv2.COLOR_HSV2BGR)
-        return rgb
+        return flow
         print(i)
 
     dataset=[i for i in range(0,29)]
@@ -80,14 +72,10 @@ for ii in range(300000):
     with Pool(processes=agents) as pool:
         result = pool.map(func, dataset, chunksize)
 
-    out = cv2.VideoWriter("/workspace/storage/Tf/"+name[i]+".avi",  
-                         cv2.VideoWriter_fourcc(*'MJPG'), 
-                         30, (640,480))   
-    for i in range(len(result)):
-        rgb = result[i]
-        out.write(rgb)
-    out.release()
-    cap.release()
+    video1 = np.asarray(result)
+    path="/workspace/storage/Tf/"+name[ii]+".npy"
+    np.save(path,video1)
+
     e = time.time()
     print("%d in %.2fs"% (ii,e-s))
     
