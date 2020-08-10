@@ -169,6 +169,7 @@ class DataGenerator(Sequence):
     #iter = iter%(len(name)-100000)
     indexes = self.indexes[iter*self.batch_size:(iter+1)*self.batch_size]
     for i in indexes:
+      if not (os.path.isfile("/workspace/storage/Tf/"+name[i]+".npy")):
         global frames
         frames = []
         vid = cv2.VideoCapture("/workspace/storage/T/"+name[i]+".avi")
@@ -189,8 +190,10 @@ class DataGenerator(Sequence):
         video = np.asarray(result)
         video = np.transpose(video, (1,2,0,3))  
         video = np.reshape(video, (144, 192, 58))
-
-    data.append(video)
+        path="/workspace/storage/Tf/"+name[i]+".npy"
+        np.save(path,video)
+      flow= np.load("/workspace/storage/Tf/"+name[i]+".npy")
+      data.append(flow_video)
     x = np.asarray(data)
     y = np.asarray(gt)
     if(self.to_fit):
@@ -220,28 +223,31 @@ class ValDataGenerator(Sequence):
     iter = (iter%100000)
     indexes = self.indexes[iter*self.batch_size:(iter+1)*self.batch_size]
     for i in indexes:
-      global frames
-      frames = []
-      
-      vid = cv2.VideoCapture("/workspace/storage/T/"+name[i]+".avi")
-      tmp = np.array([X[i], Y[i], Z[i]])
-      gt.append(tmp)
-      while(True):
-        ret, frame = vid.read()
-        if ret:
-          frames.append(frame)
-        else:
-          break
-      #Optical flow conversion
-      global dataset
-      agents = 30
-      chunksize = 1
-      with Pool(processes=agents) as pool:
-          result = pool.map(func, dataset, chunksize)
-      video = np.asarray(result)
-      video = np.transpose(video, (1,2,0,3))
-      video = np.reshape(video, (144, 192, 58))
-      data.append(video)
+      if not (os.path.isfile("/workspace/storage/Tf/"+name[i]+".npy")):
+        global frames
+        frames = []      
+        vid = cv2.VideoCapture("/workspace/storage/T/"+name[i]+".avi")
+        tmp = np.array([X[i], Y[i], Z[i]])
+        gt.append(tmp)
+        while(True):
+          ret, frame = vid.read()
+          if ret:
+            frames.append(frame)
+          else:
+            break
+        #Optical flow conversion
+        global dataset
+        agents = 30
+        chunksize = 1
+        with Pool(processes=agents) as pool:
+            result = pool.map(func, dataset, chunksize)
+        video = np.asarray(result)
+        video = np.transpose(video, (1,2,0,3))
+        video = np.reshape(video, (144, 192, 58))
+        path="/workspace/storage/Tf/"+name[i]+".npy"
+        np.save(path,video)
+      flow= np.load("/workspace/storage/Tf/"+name[i]+".npy")
+      data.append(flow_video)
     x = np.asarray(data)
     y = np.asarray(gt)
     if(self.to_fit):
